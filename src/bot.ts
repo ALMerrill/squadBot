@@ -23,6 +23,9 @@ bot.on("message", async (message: typeof Message) => {
   }
 
   if (message.content.startsWith(`${prefix}deletemessages`)) {
+    // TODO: check for permissions or role before doing this
+    message.channel.send("Not implemented");
+    return;
     try {
       const messages = await message.channel.fetchMessages();
       await message.channel.bulkDelete(messages);
