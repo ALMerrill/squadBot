@@ -1,4 +1,4 @@
-const { Client, Collection, Message, WebhookClient } = require("discord.js");
+const { Client, Permissions, Message, WebhookClient } = require("discord.js");
 
 // var { token, webhook, prefix } = require("./config.json");
 import { token, webhook, prefix } from "./config.json";
@@ -22,15 +22,19 @@ bot.on("message", async (message: typeof Message) => {
     // message.reply('pong!');
   }
 
-  if (message.content.startsWith(`${prefix}deletemessages`)) {
-    // TODO: check for permissions or role before doing this
-    message.channel.send("Not implemented");
-    return;
-    try {
-      const messages = await message.channel.fetchMessages();
-      await message.channel.bulkDelete(messages);
-    } catch (error) {
-      console.log(error);
+  //TODO: make file of translations for all unique strings, like response messages.
+  //      see if there are permission enums
+  else if (message.content.startsWith(`${prefix}deletemessages`)) {
+    console.log(Permissions.FLAGS.MANAGE_MESSAGES);
+    if (message.member.hasPermission(Permissions.FLAGS.MANAGE_MESSAGES)) {
+      try {
+        const messages = await message.channel.fetchMessages();
+        await message.channel.bulkDelete(messages);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      message.author.send("You do not have permission to run this command");
     }
   }
 });
