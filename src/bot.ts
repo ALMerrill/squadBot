@@ -56,10 +56,6 @@ bot.login(token);
 //     } else {
 //       message.author.send("You do not have permission to run this command");
 //     }
-//   } else if (command === "server-info") {
-//     message.channel.send(`Server name: ${message.guild.name}\
-//                           \nTotal members: ${message.guild.memberCount}\
-//                           \nDate created: ${message.guild.createdAt}`);
 //   } else if (command === "avatar") {
 //     if (!message.mentions.users.size) {
 //       return message.channel.send(
