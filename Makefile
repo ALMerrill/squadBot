@@ -2,7 +2,7 @@ DOCKERCOMPOSE_DEV=-f docker-compose.yml
 
 .PHONY: build_dev_image
 build_dev_image:
-	DOCKER_BUILDKIT=1 docker build -f ./docker/squad-node/Dockerfile.Dev -t squadbot:dev .
+	docker build -f ./docker/squad-node/Dockerfile.Dev -t squadbot:dev .
 
 .PHONY: startup_dev
 startup_dev:
