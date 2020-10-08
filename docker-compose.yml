@@ -1,0 +1,13 @@
+version: "3.6"
+
+services:
+  squad-bot:
+    image: squadbot/squadbot:latest
+    build:
+      context: .
+      dockerfile: docker/squad-node/Dockerfile.Dev
+      args:
+        - NODE_VERSION=12.18.2
+    volumes:
+      - ./src:/squad/src/:rw
+      - ./package.json:/squad/package.json
