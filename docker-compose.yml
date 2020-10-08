@@ -11,3 +11,4 @@ services:
     volumes:
       - ./src:/squad/src/:rw
       - ./package.json:/squad/package.json
+    restart: unless-stopped:0
