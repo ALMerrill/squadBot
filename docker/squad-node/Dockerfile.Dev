@@ -1,0 +1,16 @@
+ARG NODE_VERSION=latest
+
+FROM node:${NODE_VERSION} AS build
+
+COPY . /squad
+
+WORKDIR /squad
+RUN yarn cache clean --force
+RUN rm -rf node_modules
+RUN yarn install
+
+FROM node:${NODE_VERSION}
+WORKDIR /squad
+COPY --from=build /squad /squad
+
+ENTRYPOINT ["yarn", "run", "dev"]

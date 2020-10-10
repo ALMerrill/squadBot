@@ -1,0 +1,14 @@
+ARG NODE_VERSION=latest
+
+FROM node:${NODE_VERSION}
+
+COPY . /squad
+
+WORKDIR /squad
+RUN yarn cache clean --force
+RUN rm -rf node_modules
+RUN yarn install --production
+
+RUN rm -rf app/config
+RUN rm -rf app/db
+ENTRYPOINT ["yarn", "run", "start"]
