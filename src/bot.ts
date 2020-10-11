@@ -6,9 +6,13 @@ import { token, webhook, prefix } from "./config.json";
 
 const bot = new Client();
 bot.commands = new Collection();
-const commandFiles = fs
-  .readdirSync(`${__dirname}/commands`)
-  .filter((file) => file.endsWith(".js"));
+const commandCategories = fs.readdirSync(`${__dirname}/commands`);
+let commandFiles: string[] = [];
+commandCategories.forEach((cat) => {
+  fs.readdirSync(`${__dirname}/commands/${cat}`).forEach((file) => {
+    commandFiles.push(`${cat}/${file}`);
+  });
+});
 for (const file of commandFiles) {
   const command = require(`${__dirname}/commands/${file}`);
   bot.commands.set(command.name, command);
