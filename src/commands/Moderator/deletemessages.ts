@@ -1,6 +1,6 @@
 import { Message, PermissionOverwrites } from "discord.js";
 const { Permissions } = require("discord.js");
-import { prefix } from "../config.json";
+import { prefix } from "../../config.json";
 
 const permission = Permissions.FLAGS.MANAGE_MESSAGES;
 

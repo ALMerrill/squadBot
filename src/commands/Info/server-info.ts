@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { prefix } from "../config.json";
+import { prefix } from "../../config.json";
 
 module.exports = {
   name: "server-info",
