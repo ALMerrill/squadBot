@@ -2,16 +2,16 @@ import { Message, PermissionOverwrites } from "discord.js";
 const { Permissions } = require("discord.js");
 import { prefix } from "../../config.json";
 
-const permission = Permissions.FLAGS.MANAGE_MESSAGES;
+const permissions = [Permissions.FLAGS.MANAGE_MESSAGES];
 
 module.exports = {
   name: "deletemessages",
   usage: `${prefix}deletemessages`,
-  permission: permission,
+  permission: permissions,
   description:
     "If user has permission, delete all channel messages (mostly for use during development to clear messages from bot",
   async execute(message: Message, args: string[]) {
-    if (message.member.hasPermission(permission)) {
+    if (message.member.hasPermission(permissions)) {
       try {
         const messages = await message.channel.fetchMessages();
         await message.channel.bulkDelete(messages).catch(() => {

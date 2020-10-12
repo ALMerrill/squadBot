@@ -1,8 +1,8 @@
-const { Client, Permissions, User, WebhookClient } = require("discord.js");
+const { Client } = require("discord.js");
 import { Collection, Message } from "discord.js";
 import fs from "fs";
 
-import { token, webhook, prefix } from "./config.json";
+import { token, prefix } from "./config.json";
 
 const bot = new Client();
 bot.commands = new Collection();

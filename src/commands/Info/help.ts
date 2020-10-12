@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { prefix } from "../../config.json";
 import fs from "fs";
+import Utils from "../../util/utils";
 
 module.exports = {
   name: "help",
@@ -21,6 +22,6 @@ module.exports = {
         help += `**${command.usage}:** ${command.description}\n`;
       }
     }
-    message.channel.send(help);
+    Utils.dm_response(message, help);
   },
 };
