@@ -9,7 +9,7 @@ module.exports = {
   usage: `${prefix}deletemessages`,
   permission: permissions,
   description:
-    "If user has permission, delete all channel messages (mostly for use during development to clear messages from bot",
+    "If user has permission, delete all channel messages (mostly for use during development to clear messages from bot)",
   async execute(message: Message, args: string[]) {
     if (message.member && message.member.hasPermission(permissions)) {
       try {

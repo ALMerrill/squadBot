@@ -3,6 +3,7 @@ import { Collection, Message } from "discord.js";
 import fs from "fs";
 
 import { token, prefix } from "./config.json";
+import Utils from "./util/utils"
 
 const bot = new Client();
 bot.commands = new Collection();
@@ -34,7 +35,8 @@ bot.on("message", (message: Message) => {
     bot.commands.get(command).execute(message, args);
   } catch (error) {
     console.error(error);
-    message.reply("there was an error trying to execute that command!");
+    Utils.dm_response(message, "There was an error trying to execute that command!")
+
   }
 });
 
