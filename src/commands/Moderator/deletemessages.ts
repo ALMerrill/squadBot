@@ -11,12 +11,13 @@ module.exports = {
   description:
     "If user has permission, delete all channel messages (mostly for use during development to clear messages from bot",
   async execute(message: Message, args: string[]) {
-    if (message.member.hasPermission(permissions)) {
+    if (message.member && message.member.hasPermission(permissions)) {
       try {
-        const messages = await message.channel.fetchMessages();
-        await message.channel.bulkDelete(messages).catch(() => {
-          message.author.send("Error deleting messages");
-        });
+        message.author.send("Not implemented, needs updates for discord.js version 12")
+        //const messages = await message.channel.fetchMessages();
+        //await message.channel.bulkDelete(messages).catch(() => {
+        //  message.author.send("Error deleting messages");
+        //});
       } catch (error) {
         console.log(error);
       }

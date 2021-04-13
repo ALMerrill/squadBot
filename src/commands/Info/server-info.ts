@@ -7,9 +7,12 @@ module.exports = {
   usage: `${prefix}server-info`,
   description: "Get basic server info",
   execute(message: Message, args: string[]) {
-    const response = `Server name: ${message.guild.name}\
-    \nTotal members: ${message.guild.memberCount}\
-    \nDate created: ${message.guild.createdAt}`;
-    Utils.dm_response(message, response);
+    const guild = message.guild
+    if (guild) {
+        const response = `Server name: ${guild.name}\
+        \nTotal members: ${guild.memberCount}\
+        \nDate created: ${guild.createdAt}`;
+        Utils.dm_response(message, response);
+    }
   },
 };

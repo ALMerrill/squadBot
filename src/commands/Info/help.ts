@@ -16,7 +16,7 @@ module.exports = {
       const command = require(`${__dirname}/${file}`);
       if (
         (command.permission &&
-          message.member.hasPermission(command.permission)) ||
+          message.member?.hasPermission(command.permission)) ||
         !command.permission
       ) {
         help += `**${command.usage}:** ${command.description}\n`;
