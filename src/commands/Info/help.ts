@@ -9,8 +9,6 @@ module.exports = {
   description: "Shows all of the bot commands available to the user",
   execute(message: Message, args: string[]) {
     let help = "Here are the available commands!\n";
-    console.log(__dirname + '/..')
-    console.log(fs.readdirSync(`${__dirname}/../`))
     const commandRoot = `${__dirname}/../`
     const commandDirs = fs.readdirSync(commandRoot)
     for (const dir of commandDirs) {

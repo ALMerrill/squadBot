@@ -4,5 +4,6 @@
   "webhook": {
     "id": "",
     "token": ""
-  }
+  },
+  "twitch_clip_channel_id": ""
 }

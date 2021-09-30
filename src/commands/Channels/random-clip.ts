@@ -16,7 +16,13 @@ module.exports = {
                                   .filter(message => message.content.includes('https://clips.twitch.tv/'))
                                   .map(message => message.content)
             const response: string = twitch_clips[Math.floor(Math.random() * twitch_clips.length) as number]
-            Utils.dm_response(message, response)
+            console.log(message)
+            console.log(response)
+            if (response) {
+              Utils.dm_response(message, response)
+            } else {
+              Utils.dm_response(message, "No Twitch clips found")
+            }
           })
       }
     } else {
