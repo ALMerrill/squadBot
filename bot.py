@@ -35,7 +35,7 @@ async def on_ready():
 
 
 @tree.command(name="ping", description="Ping the bot", guild=guild)
-async def status(interaction: discord.Interaction):
+async def ping(interaction: discord.Interaction):
     await interaction.response.send_message("pong")
 
 
@@ -46,14 +46,14 @@ async def status(interaction: discord.Interaction):
 
 
 @tree.command(name="state", description="Get info on the state of the server", guild=guild)
-async def status(interaction: discord.Interaction):
+async def state(interaction: discord.Interaction):
     state = get_server_state()
     tier = state["techTier"]
-    phase = state["gamePhase"].split("_")[-1]
+    phase = state["gamePhase"].split("_")[-1].replace("'", "")
     if not phase.isdigit():
         phase = "Unknown"
     players = state["numConnectedPlayers"]
-    schematic = state["activeSchematic"]
+    schematic = state["activeSchematic"].split("_")[-1].replace(",", "")
     paused = state["isGamePaused"]
     message = textwrap.dedent(f"""
     **Active players**: `{players}`
