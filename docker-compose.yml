@@ -1,14 +1,10 @@
-version: "3.6"
+version: "3.8"
 
 services:
   squad-bot:
-    image: squadbot/squadbot:latest
     build:
       context: .
-      dockerfile: docker/squad-node/Dockerfile.Dev
-      args:
-        - NODE_VERSION=12.18.2
-    volumes:
-      - ./src:/squad/src/:rw
-      - ./package.json:/squad/package.json
-    restart: unless-stopped:0
+      dockerfile: docker/Dockerfile
+    env_file:
+      - .env
+    restart: unless-stopped

@@ -1,23 +1,22 @@
 # bot.py
 import os
 
+import asyncio
 import discord
-import textwrap
 
 from discord import app_commands
 from dotenv import load_dotenv
-from satisfactory_server_utils import (
-    get_server_status,
-    get_server_state,
-    monitor_server,
-    monitor_server_state,
-    ServerStatus
+from amp_server_utils import (
+    AmpServerState,
+    get_status as get_ark_status,
+    graceful_stop_with_save,
+    start_server as start_ark_server,
 )
 
 load_dotenv()
-SERVER_ID = os.getenv("SERVER_ID")
+SERVER_ID = int(os.getenv("SERVER_ID", "-1"))
 TOKEN = os.getenv("DISCORD_TOKEN")
-PREFIX = os.getenv("BOT_PREFIX")
+ARK_CONTROL_CHANNEL_ID = int(os.getenv("ARK_CONTROL_CHANNEL_ID", "-1"))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -28,8 +27,6 @@ guild = discord.Object(id=SERVER_ID)
 
 @client.event
 async def on_ready():
-    client.loop.create_task(monitor_server(client))
-    client.loop.create_task(monitor_server_state(client))
     await tree.sync(guild=guild)
     print(f"{client.user} has connected to Discord!")
 
@@ -39,40 +36,50 @@ async def ping(interaction: discord.Interaction):
     await interaction.response.send_message("pong")
 
 
-@tree.command(name="status", description="Get current running status of the Satisfactory server", guild=guild)
-async def status(interaction: discord.Interaction):
-    status = get_server_status().value.title()
-    await interaction.response.send_message(f"Server's current status: {status}")
+def _is_ark_channel(interaction: discord.Interaction) -> bool:
+    return interaction.channel_id == ARK_CONTROL_CHANNEL_ID
 
 
-@tree.command(name="state", description="Get info on the state of the server", guild=guild)
-async def state(interaction: discord.Interaction):
-    state = get_server_state()
-    tier = state["techTier"]
-    phase = state["gamePhase"].split("_")[-1].replace("'", "")
-    if not phase.isdigit():
-        phase = "Unknown"
-    players = state["numConnectedPlayers"]
-    schematic = state["activeSchematic"].split("_")[-1].replace(",", "")
-    paused = state["isGamePaused"]
-    message = textwrap.dedent(f"""
-    **Active players**: `{players}`
-    **Game running**: `{not paused}`
-    **Current tier**: `{tier}`
-    **Current phase**: `{phase}`
-    **Current schematic**: `{schematic}`
-    """).strip()
-    await interaction.response.send_message(message)
-
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
+@tree.command(name="start-ark", description="Start the ARK server", guild=guild)
+async def start_ark(interaction: discord.Interaction):
+    if not _is_ark_channel(interaction):
+        await interaction.response.send_message(
+            "This command can only be used in the ARK control channel.",
+            ephemeral=True,
+        )
         return
-    content = message.content
-    if not content.startswith(PREFIX):
+
+    await interaction.response.defer(thinking=True)
+    try:
+        status = await asyncio.to_thread(get_ark_status)
+        if status in (AmpServerState.RUNNING, AmpServerState.STARTING):
+            await interaction.followup.send(f"ARK server is already {status.name.lower()}.")
+            return
+        await asyncio.to_thread(start_ark_server)
+        await interaction.followup.send("ARK server start requested.")
+    except Exception as exc:
+        await interaction.followup.send(f"Failed to start ARK server: {exc}")
+
+
+@tree.command(name="stop-ark", description="Stop the ARK server (save then stop)", guild=guild)
+async def stop_ark(interaction: discord.Interaction):
+    if not _is_ark_channel(interaction):
+        await interaction.response.send_message(
+            "This command can only be used in the ARK control channel.",
+            ephemeral=True,
+        )
         return
-    content = content.replace(f"{PREFIX} ", "").strip().lower()
-    
+
+    await interaction.response.defer(thinking=True)
+    try:
+        status = await asyncio.to_thread(get_ark_status)
+        if status in (AmpServerState.STOPPED, AmpServerState.STOPPING):
+            await interaction.followup.send(f"ARK server is already {status.name.lower()}.")
+            return
+        await asyncio.to_thread(graceful_stop_with_save)
+        await interaction.followup.send("ARK server save issued and stop requested.")
+    except Exception as exc:
+        await interaction.followup.send(f"Failed to stop ARK server: {exc}")
+
 
 client.run(TOKEN)
