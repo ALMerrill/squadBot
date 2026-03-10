@@ -20,11 +20,13 @@ Required:
 - `AMP_BASE_URL` (e.g. `https://amp.droo.app`)
 - `AMP_USERNAME`
 - `AMP_PASSWORD`
+- `ARK_INSTANCE_NAME` (AMP instance name, e.g. `ark01`)
 - `ARK_INSTANCE_ID` (AMP instance GUID)
- - `ARK_CONNECT_URL` (optional connect URL shown in `/status-ark`, e.g. `steam://connect/amp.droo.app:27015`)
 
 Optional:
 - `ARK_SAVE_DELAY_SECONDS` (default `15`)
+- `ARK_CONNECT_URL` (optional connect URL shown in `/status-ark`, e.g. `steam://connect/amp.droo.app:27015`)
+- `AMP_DEBUG` (set `true` to include raw AMP responses in command output)
 
 ## AMP permissions
 
