@@ -27,6 +27,7 @@ Optional:
 - `ARK_SAVE_DELAY_SECONDS` (default `15`)
 - `ARK_CONNECT_URL` (optional connect URL shown in `/status-ark`, e.g. `steam://connect/amp.droo.app:27015`)
 - `AMP_DEBUG` (set `true` to include raw AMP responses in command output)
+- `ARK_SERVER_URL` (optional; default `ark.amerrill.com:7777`)
 
 ## AMP permissions
 

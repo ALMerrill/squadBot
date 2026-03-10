@@ -26,6 +26,7 @@ load_dotenv()
 SERVER_ID = int(os.getenv("SERVER_ID", "-1"))
 TOKEN = os.getenv("DISCORD_TOKEN")
 ARK_CONTROL_CHANNEL_ID = int(os.getenv("ARK_CONTROL_CHANNEL_ID", "-1"))
+ARK_SERVER_URL = os.getenv("ARK_SERVER_URL", "ark.amerrill.com:7777")
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -55,6 +56,10 @@ async def _send_safe(interaction: discord.Interaction, content: str) -> None:
     await interaction.followup.send(content)
 
 
+def _ark_server_url() -> str:
+    return ARK_SERVER_URL
+
+
 @tree.command(name="start-ark", description="Start the ARK server", guild=guild)
 async def start_ark(interaction: discord.Interaction):
     if not _is_ark_channel(interaction):
@@ -75,7 +80,7 @@ async def start_ark(interaction: discord.Interaction):
             reason = _action_reason(result)
             await _send_safe(interaction, f"ARK server start failed. {reason}".strip())
             return
-        msg = "ARK server start requested."
+        msg = f"ARK server start requested. Server URL: {_ark_server_url()}"
         if AMP_DEBUG:
             msg += f" Raw: {result}"
         await _send_safe(interaction, msg)
@@ -150,7 +155,7 @@ async def status_ark(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True)
     try:
         status, status_text = await asyncio.to_thread(get_ark_status_info)
-        message = f"ARK server status: {status.name.lower()}."
+        message = f"ARK server status: {status.name.lower()}. Server URL: {_ark_server_url()}"
         if status_text:
             message += f" ({status_text})"
         # AMP API for this instance doesn't expose player counts or rich state.
