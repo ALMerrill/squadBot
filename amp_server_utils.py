@@ -13,6 +13,7 @@ AMP_USERNAME = os.getenv("AMP_USERNAME", "")
 AMP_PASSWORD = os.getenv("AMP_PASSWORD", "")
 ARK_INSTANCE_ID = os.getenv("ARK_INSTANCE_ID", "")
 ARK_SAVE_DELAY_SECONDS = int(os.getenv("ARK_SAVE_DELAY_SECONDS", "15"))
+ARK_CONNECT_URL = os.getenv("ARK_CONNECT_URL", "")
 
 _session_id: Optional[str] = None
 
@@ -85,6 +86,16 @@ def get_status() -> AmpServerState:
 
 def start_server() -> bool:
     data = _request(f"/API/ADSModule/Servers/{ARK_INSTANCE_ID}/Start")
+    return bool(data) if isinstance(data, dict) else True
+
+
+def restart_server() -> bool:
+    data = _request(f"/API/ADSModule/Servers/{ARK_INSTANCE_ID}/Restart")
+    return bool(data) if isinstance(data, dict) else True
+
+
+def update_server() -> bool:
+    data = _request(f"/API/ADSModule/Servers/{ARK_INSTANCE_ID}/Update")
     return bool(data) if isinstance(data, dict) else True
 
 

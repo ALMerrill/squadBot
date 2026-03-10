@@ -10,7 +10,10 @@ from amp_server_utils import (
     AmpServerState,
     get_status as get_ark_status,
     graceful_stop_with_save,
+    restart_server as restart_ark_server,
     start_server as start_ark_server,
+    update_server as update_ark_server,
+    ARK_CONNECT_URL,
 )
 
 load_dotenv()
@@ -59,6 +62,64 @@ async def start_ark(interaction: discord.Interaction):
         await interaction.followup.send("ARK server start requested.")
     except Exception as exc:
         await interaction.followup.send(f"Failed to start ARK server: {exc}")
+
+
+@tree.command(name="reboot-ark", description="Restart the ARK server", guild=guild)
+async def reboot_ark(interaction: discord.Interaction):
+    if not _is_ark_channel(interaction):
+        await interaction.response.send_message(
+            "This command can only be used in the ARK control channel.",
+            ephemeral=True,
+        )
+        return
+
+    await interaction.response.defer(thinking=True)
+    try:
+        status = await asyncio.to_thread(get_ark_status)
+        if status in (AmpServerState.STOPPED, AmpServerState.STOPPING):
+            await interaction.followup.send("ARK server is stopped; use /start-ark.")
+            return
+        await asyncio.to_thread(restart_ark_server)
+        await interaction.followup.send("ARK server restart requested.")
+    except Exception as exc:
+        await interaction.followup.send(f"Failed to restart ARK server: {exc}")
+
+
+@tree.command(name="update-ark", description="Update the ARK server via AMP", guild=guild)
+async def update_ark(interaction: discord.Interaction):
+    if not _is_ark_channel(interaction):
+        await interaction.response.send_message(
+            "This command can only be used in the ARK control channel.",
+            ephemeral=True,
+        )
+        return
+
+    await interaction.response.defer(thinking=True)
+    try:
+        await asyncio.to_thread(update_ark_server)
+        await interaction.followup.send("ARK server update requested.")
+    except Exception as exc:
+        await interaction.followup.send(f"Failed to update ARK server: {exc}")
+
+
+@tree.command(name="status-ark", description="Get ARK server status", guild=guild)
+async def status_ark(interaction: discord.Interaction):
+    if not _is_ark_channel(interaction):
+        await interaction.response.send_message(
+            "This command can only be used in the ARK control channel.",
+            ephemeral=True,
+        )
+        return
+
+    await interaction.response.defer(thinking=True)
+    try:
+        status = await asyncio.to_thread(get_ark_status)
+        message = f"ARK server status: {status.name.lower()}."
+        if ARK_CONNECT_URL:
+            message += f" Connect: {ARK_CONNECT_URL}"
+        await interaction.followup.send(message)
+    except Exception as exc:
+        await interaction.followup.send(f"Failed to get ARK server status: {exc}")
 
 
 @tree.command(name="stop-ark", description="Stop the ARK server (save then stop)", guild=guild)

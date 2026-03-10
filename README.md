@@ -21,6 +21,7 @@ Required:
 - `AMP_USERNAME`
 - `AMP_PASSWORD`
 - `ARK_INSTANCE_ID` (AMP instance GUID)
+ - `ARK_CONNECT_URL` (optional connect URL shown in `/status-ark`, e.g. `steam://connect/amp.droo.app:27015`)
 
 Optional:
 - `ARK_SAVE_DELAY_SECONDS` (default `15`)
@@ -30,6 +31,14 @@ Optional:
 The AMP user must have:
 - `Console - Send`
 - `Manage Instance`
+
+## Commands
+
+- `/start-ark`
+- `/stop-ark`
+- `/reboot-ark`
+- `/update-ark`
+- `/status-ark`
 
 ## Docker
 
